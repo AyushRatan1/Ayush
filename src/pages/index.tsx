@@ -2,6 +2,11 @@ import Container from "@/components/Container";
 import { useEffect, useRef, Suspense, useState } from "react";
 import styles from "@/styles/Home.module.css";
 import { Button } from "@/components/ui/button";
+import { LampDemo } from "@/components/lamp";
+import ScrollMaskSection from "@/components/ScrollMaskSection";
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
 import {
   ChevronRight,
   Code2,
@@ -9,6 +14,11 @@ import {
   SearchCheck,
   Eye,
   MonitorSmartphone,
+  Smartphone,
+  Server,
+  Globe,
+  Cpu,
+  Database,
 } from "lucide-react";
 import { TriangleDownIcon } from "@radix-ui/react-icons";
 import Spline from "@splinetool/react-spline";
@@ -27,11 +37,37 @@ import {
 import VanillaTilt from "vanilla-tilt";
 import { motion } from "framer-motion";
 
-const aboutStats = [
-  { label: "Years of experience", value: "3+" },
-  { label: "Technologies mastered", value: "5+" },
-  { label: "Companies worked with", value: "3+" },
-];
+
+
+  const aboutStats = [
+    { value: '5+', label: 'Years Experience' },
+    { value: '20+', label: 'Projects Completed' },
+    { value: '15+', label: 'Happy Clients' },
+    { value: '10+', label: 'Mobile Apps Launched' }
+  ];
+
+  const skills = [
+    {
+      icon: <Code2 className="h-6 w-6 text-purple-400" />,
+      title: "Full-Stack Development",
+      tech: "TypeScript, Next.js, Tailwind"
+    },
+    {
+      icon: <Smartphone className="h-6 w-6 text-blue-400" />,
+      title: "Mobile Development",
+      tech: "Kotlin, Android SDK, Jetpack Compose"
+    },
+    {
+      icon: <MonitorSmartphone className="h-6 w-6 text-green-400" />,
+      title: "AI Integration",
+      tech: "Machine Learning, AI APIs"
+    },
+    {
+      icon: <Server className="h-6 w-6 text-orange-400" />,
+      title: "Backend Systems",
+      tech: "Node.js, Spring Boot, REST APIs"
+    }
+  ];
 
 const projects = [
   {
@@ -61,6 +97,19 @@ const projects = [
     href: "https://csitss.ieee-rvce.org/",
   },
   {
+    title: "Coin Split",
+    description: "A Web3 based project to allow splitwise features but on cryptocurrency and makes it easy to share and recieve crypto",
+    image: "/assets/6.png",
+    href: "https://csitss.ieee-rvce.org/",
+  },
+  
+  {
+    title: "Community Nexus ",
+    description: "AI based application for Community Developemnt",
+    image: "/assets/5.jpeg",
+    href: "https://github.com/HarshJha454/Com_nex",
+  },
+  {
     title: "EMG sensor ",
     description: "Robotics-arm motion detection",
     image: "/assets/4.png",
@@ -70,43 +119,59 @@ const projects = [
 
 const services = [
   {
-    service: "Frontend Development",
-    description:
-      "Creating stellar user interfaces and web experiences using the latest technologies.",
     icon: Code2,
+    service: "Full-Stack Development",
+    description: "End-to-end web applications built with modern technologies and best practices.",
+    gradient: "from-blue-500 to-purple-500"
   },
   {
-    service: "UX Design",
-    description:
-      "Building intuitive, user-centric designs that drive engagement and conversion.",
-    icon: Frame,
+    icon: Smartphone,
+    service: "Mobile Development",
+    description: "Native and cross-platform mobile apps with stunning UI and smooth performance.",
+    gradient: "from-purple-500 to-pink-500"
   },
   {
-    service: "SEO Optimization",
-    description:
-      "Enhancing your website's visibility in search engines for increased organic traffic.",
-    icon: SearchCheck,
+    icon: Globe,
+    service: "Web Development",
+    description: "Responsive, fast, and SEO-friendly websites that drive results.",
+    gradient: "from-pink-500 to-red-500"
   },
   {
-    service: "Responsive Design",
-    description:
-      "Designing websites that look and perform equally well on all devices and screen sizes.",
-    icon: MonitorSmartphone,
+    icon: Cpu,
+    service: "AI Integration",
+    description: "Implementing cutting-edge AI solutions to enhance your applications.",
+    gradient: "from-red-500 to-orange-500"
   },
   {
-    service: "Backend Development",
-    description:
-      "Developing robust, scalable server-side logic for a wide range of web applications.",
-    icon: Eye,
-  },
+    icon: Database,
+    service: "Database Design",
+    description: "Scalable and efficient database architectures for your applications.",
+    gradient: "from-orange-500 to-yellow-500"
+  }
 ];
-
 export default function Home() {
   const refScrollContainer = useRef(null);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
+
+  // handle mouse movement for gradient effect
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const sections = document.querySelectorAll('section');
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        section.style.setProperty('--mouse-x', `${x}%`);
+        section.style.setProperty('--mouse-y', `${y}%`);
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   // handle scroll
   useEffect(() => {
@@ -179,11 +244,17 @@ export default function Home() {
       <div ref={refScrollContainer}>
         <Gradient />
 
+        {/* Lamp Demo */}
+        <section data-scroll-section className="bg-black relative isolate min-h-screen">
+          <div className="absolute inset-0 bg-black -z-10" />
+          <LampDemo />
+        </section>
+
         {/* Intro */}
         <section
           id="home"
           data-scroll-section
-          className="mt-40 flex w-full flex-col items-center xl:mt-0 xl:min-h-screen xl:flex-row xl:justify-between"
+          className="mt-20 sm:mt-40 px-4 flex w-full flex-col items-center xl:mt-0 xl:min-h-screen xl:flex-row xl:justify-between"
         >
           <div className={styles.intro}>
             <div
@@ -203,11 +274,11 @@ export default function Home() {
                 data-scroll-speed=".06"
                 data-scroll-direction="horizontal"
               >
-                <span className="text-6xl tracking-tighter text-foreground 2xl:text-8xl">
+                <span className="text-4xl sm:text-6xl tracking-tighter text-foreground 2xl:text-8xl">
                   Hello, I&apos;m
                   <br />
                 </span>
-                <span className="clash-grotesk text-gradient text-6xl 2xl:text-8xl">
+                <span className="clash-grotesk text-gradient text-4xl sm:text-6xl 2xl:text-8xl">
                   Ayush Ratan.
                 </span>
               </h1>
@@ -215,7 +286,7 @@ export default function Home() {
                 data-scroll
                 data-scroll-enable-touch-speed
                 data-scroll-speed=".06"
-                className="mt-1 max-w-lg tracking-tight text-muted-foreground 2xl:text-xl"
+                className="mt-1 max-w-lg tracking-tight text-muted-foreground text-base sm:text-lg 2xl:text-xl"
               >
                 Undergraduate Student at RV College of Engineering
               </p>
@@ -224,7 +295,7 @@ export default function Home() {
                 data-scroll
                 data-scroll-enable-touch-speed
                 data-scroll-speed=".06"
-                className="mt-1 max-w-lg tracking-tight text-muted-foreground 2xl:text-xl"
+                className="mt-1 max-w-lg tracking-tight text-muted-foreground text-base sm:text-lg 2xl:text-xl"
               >
                 An experienced full-stack website developer with a passion for
                 crafting unique digital experiences.
@@ -263,86 +334,115 @@ export default function Home() {
             data-scroll
             data-scroll-speed="-.01"
             id={styles["canvas-container"]}
-            className="mt-14 h-full w-full xl:mt-0"
+            className="mt-10 sm:mt-14 h-[300px] sm:h-full w-full xl:mt-0"
           >
             <Suspense fallback={<span>Loading...</span>}>
-              <Spline scene="/assets/scene.splinecode" />
+              <Spline scene="https://prod.spline.design/NL3sY1jG3mCpVnZ1/scene.splinecode" />
             </Suspense>
           </div>
         </section>
 
         {/* About */}
-        <section id="about" data-scroll-section>
-          <div
-            data-scroll
-            data-scroll-speed=".4"
-            data-scroll-position="top"
-            className="my-14 flex max-w-6xl flex-col justify-start space-y-10"
-          >
-            <h2 className="py-16  pb-2 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]">
-              I&apos;m an experienced full-stack developer proficient in{" "}
-              <Link
-                href="https://create.t3.gg/"
-                target="_blank"
-                className="underline"
-              >
-                TypeScript, Tailwind, and Next.js
-              </Link>{" "}
-              with expertise in AI-driven solutions and a track record of
-              delivering high-quality, innovative software. Led project at WIPRO
-              and spearheading cutting-edge software development. Experienced in
-              collaborating with teams to deliver client-focused solutions at
-              IEEE-RVCE and Postman.
-            </h2>
-            <div className="grid grid-cols-2 gap-8 xl:grid-cols-3">
-              {aboutStats.map((stat) => (
-                <div
-                  key={stat.label}
-                  className="flex flex-col items-center text-center xl:items-start xl:text-start"
-                >
-                  <span className="clash-grotesk text-gradient text-4xl font-semibold tracking-tight xl:text-6xl">
-                    {stat.value}
-                  </span>
-                  <span className="tracking-tight text-muted-foreground xl:text-lg">
-                    {stat.label}
-                  </span>
+        <section id="about" className="relative overflow-hidden bg-gradient-to-b from-background to-background/80 py-16 sm:py-24 px-4">
+          <div className="mx-auto max-w-6xl">
+            {/* Background decoration */}
+            <div className="absolute inset-0 -z-10">
+              <div className="absolute right-1/2 top-0 h-[300px] sm:h-[500px] w-[300px] sm:w-[500px] rounded-full bg-purple-500/10 blur-3xl" />
+              <div className="absolute left-1/2 top-1/2 h-[300px] sm:h-[500px] w-[300px] sm:w-[500px] rounded-full bg-blue-500/10 blur-3xl" />
+            </div>
+
+            {/* Main content */}
+            <div className="flex flex-col gap-8 sm:gap-16">
+              {/* Intro text */}
+              <div className="relative">
+                <h2 className="max-w-4xl text-2xl sm:text-3xl font-light leading-relaxed tracking-tight text-foreground md:text-4xl lg:text-5xl">
+                  I'm an experienced{' '}
+                  <span className="animate-text-gradient bg-gradient-to-r from-purple-400 via-blue-500 to-purple-400 bg-clip-text text-transparent">
+                    full-stack & mobile developer
+                  </span>{' '}
+                  proficient in{' '}
+                  <Link
+                    href="https://create.t3.gg/"
+                    target="_blank"
+                    className="group relative inline-block overflow-hidden"
+                  >
+                    <span className="relative z-10 underline decoration-blue-500/50 decoration-2 underline-offset-4 transition-colors duration-300 hover:decoration-blue-500">
+                      TypeScript, Kotlin, and Next.js
+                    </span>
+                  </Link>
+                </h2>
+              </div>
+
+              {/* Skills grid */}
+              <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {skills.map((skill) => (
+                  <div
+                    key={skill.title}
+                    className="group relative rounded-xl border border-border/50 bg-card/50 p-4 sm:p-6 transition-all duration-300 hover:border-border hover:bg-card"
+                  >
+                    <div className="mb-4">{skill.icon}</div>
+                    <h3 className="mb-2 text-base sm:text-lg font-semibold">{skill.title}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{skill.tech}</p>
+                    <div className="absolute right-2 top-2 h-2 w-2 rounded-full bg-purple-500/50 transition-all duration-300 group-hover:bg-purple-500" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Stats grid */}
+              <div className="grid grid-cols-2 gap-4 sm:gap-8 lg:grid-cols-4">
+                {aboutStats.map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="group relative rounded-xl border border-border/50 bg-card/50 p-4 sm:p-6 transition-all duration-300 hover:border-border hover:bg-card"
+                  >
+                    <div className="flex flex-col gap-2">
+                      <span className="bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-2xl sm:text-4xl font-bold tracking-tight text-transparent md:text-5xl lg:text-6xl">
+                        {stat.value}
+                      </span>
+                      <span className="text-xs sm:text-sm font-medium text-muted-foreground md:text-base">
+                        {stat.label}
+                      </span>
+                    </div>
+                    <div className="absolute right-2 top-2 h-2 w-2 rounded-full bg-purple-500/50 transition-all duration-300 group-hover:bg-purple-500" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Experience highlights */}
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <div className="rounded-xl border border-border/50 bg-card/50 p-6">
+                  <h3 className="mb-3 text-lg font-semibold">Full-Stack & Mobile Leadership</h3>
+                  <p className="text-muted-foreground">
+                    Led innovative web and mobile projects at WIPRO, developing cutting-edge applications using Kotlin and modern web technologies.
+                  </p>
                 </div>
-              ))}
+                <div className="rounded-xl border border-border/50 bg-card/50 p-6">
+                  <h3 className="mb-3 text-lg font-semibold">Cross-Platform Expertise</h3>
+                  <p className="text-muted-foreground">
+                    Experienced in delivering client-focused solutions at IEEE-RVCE and Postman, specializing in both web and mobile development.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
-
+        
         {/* Projects */}
-        <section id="projects" data-scroll-section>
-          {/* Gradient */}
-          <div className="relative isolate -z-10">
-            <div
-              className="absolute inset-x-0 -top-40 transform-gpu overflow-hidden blur-[100px] sm:-top-80 lg:-top-60"
-              aria-hidden="true"
-            >
-              <div
-                className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-primary via-primary to-secondary opacity-10 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-                style={{
-                  clipPath:
-                    "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-                }}
-              />
-            </div>
-          </div>
-          <div data-scroll data-scroll-speed=".4" className="my-64">
+        <section id="projects" data-scroll-section className="px-4">
+          <div data-scroll data-scroll-speed=".4" className="my-32 sm:my-64">
             <span className="text-gradient clash-grotesk text-sm font-semibold tracking-tighter">
               ✨ Projects
             </span>
-            <h2 className="mt-3 text-4xl font-semibold tracking-tight tracking-tighter xl:text-6xl">
+            <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight tracking-tighter xl:text-6xl">
               Experiences.
             </h2>
-            <p className="mt-1.5 text-base tracking-tight text-muted-foreground xl:text-lg">
+            <p className="mt-1.5 text-sm sm:text-base tracking-tight text-muted-foreground xl:text-lg">
               I&apos;ve worked on a variety of projects, from small websites to
               large-scale web applications. Here are some of my favorites:
             </p>
 
             {/* Carousel */}
-            <div className="mt-14">
+            <div className="mt-8 sm:mt-14">
               <Carousel setApi={setCarouselApi} className="w-full">
                 <CarouselContent>
                   {projects.map((project) => (
@@ -371,7 +471,7 @@ export default function Home() {
                           </Link>
                         </CardHeader>
                         <CardContent className="absolute bottom-0 w-full bg-background/50 backdrop-blur">
-                          <CardTitle className="border-t border-white/5 p-4 text-base font-normal tracking-tighter">
+                          <CardTitle className="border-t border-white/5 p-4 text-sm sm:text-base font-normal tracking-tighter">
                             {project.description}
                           </CardTitle>
                         </CardContent>
@@ -382,7 +482,7 @@ export default function Home() {
                 <CarouselPrevious />
                 <CarouselNext />
               </Carousel>
-              <div className="py-2 text-center text-sm text-muted-foreground">
+              <div className="py-2 text-center text-xs sm:text-sm text-muted-foreground">
                 <span className="font-semibold">
                   {current} / {count}
                 </span>{" "}
@@ -393,67 +493,81 @@ export default function Home() {
         </section>
 
         {/* Services */}
-        <section id="services" data-scroll-section>
-          <div
-            data-scroll
-            data-scroll-speed=".4"
-            data-scroll-position="top"
-            className="my-24 flex flex-col justify-start space-y-10"
-          >
+        <section id="services" className="relative py-16 sm:py-24 px-4">
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute left-1/4 top-1/4 h-32 sm:h-64 w-32 sm:w-64 rounded-full bg-primary/10 blur-3xl" />
+            <div className="absolute right-1/4 top-3/4 h-32 sm:h-64 w-32 sm:w-64 rounded-full bg-secondary/10 blur-3xl" />
+          </div>
+
+          <div className="mx-auto max-w-7xl">
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{
-                duration: 1,
-                staggerChildren: 0.5,
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="grid items-center gap-1.5 md:grid-cols-2 xl:grid-cols-3"
+              className="mb-8 sm:mb-16 text-center"
             >
-              <div className="flex flex-col py-6 xl:p-6">
-                <h2 className="text-4xl font-medium tracking-tight">
-                  Need more info?
-                  <br />
-                  <span className="text-gradient clash-grotesk tracking-normal">
-                    I got you.
-                  </span>
-                </h2>
-                <p className="mt-2 tracking-tighter text-secondary-foreground">
-                  Here are some of the services I offer. If you have any
-                  questions, feel free to reach out.
-                </p>
-              </div>
-              {services.map((service) => (
-                <div
-                  key={service.service}
-                  className="flex flex-col items-start rounded-md bg-white/5 p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md"
-                >
-                  <service.icon className="my-6 text-primary" size={20} />
-                  <span className="text-lg tracking-tight text-foreground">
-                    {service.service}
-                  </span>
-                  <span className="mt-2 tracking-tighter text-muted-foreground">
-                    {service.description}
-                  </span>
-                </div>
-              ))}
+              <h2 className="mb-4 text-3xl sm:text-4xl font-medium tracking-tight md:text-5xl lg:text-6xl">
+                Need more info?
+                <br />
+                <span className="text-gradient clash-grotesk">
+                  I got you covered.
+                </span>
+              </h2>
+              <p className="mx-auto max-w-2xl text-sm sm:text-lg tracking-tighter text-secondary-foreground">
+                Here are some of the services I offer. Each solution is tailored to your specific needs
+                and built with the latest technologies.
+              </p>
             </motion.div>
+
+            <div className="grid gap-4 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {services.map((service, index) => (
+                <motion.div
+                  key={service.service}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/50 p-6 sm:p-8 backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:border-white/20"
+                >
+                  {/* Gradient overlay */}
+                  <div className={`absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-5 bg-gradient-to-br ${service.gradient}`} />
+                  
+                  {/* Icon container */}
+                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-white/5 transition-colors duration-300 group-hover:bg-white/10">
+                    <service.icon className="h-6 w-6 text-primary transition-colors duration-300 group-hover:text-white" />
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="mb-3 text-lg sm:text-xl font-semibold tracking-tight">
+                    {service.service}
+                  </h3>
+                  <p className="text-sm sm:text-base text-secondary-foreground">
+                    {service.description}
+                  </p>
+
+                  {/* Decorative elements */}
+                  <div className="absolute right-4 top-4 h-20 w-20 rounded-full border border-white/5 opacity-20" />
+                  <div className="absolute right-8 top-8 h-12 w-12 rounded-full border border-white/5 opacity-10" />
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* Contact */}
-        <section id="contact" data-scroll-section className="my-64">
+        <section id="contact" data-scroll-section className="my-32 sm:my-64 px-4">
           <div
             data-scroll
             data-scroll-speed=".4"
             data-scroll-position="top"
-            className="flex flex-col items-center justify-center rounded-lg bg-gradient-to-br from-primary/[6.5%] to-white/5 px-8 py-16 text-center xl:py-24"
+            className="flex flex-col items-center justify-center rounded-lg bg-gradient-to-br from-primary/[6.5%] to-white/5 px-4 sm:px-8 py-12 sm:py-16 text-center xl:py-24"
           >
-            <h2 className="text-4xl font-medium tracking-tighter xl:text-6xl">
+            <h2 className="text-3xl sm:text-4xl font-medium tracking-tighter xl:text-6xl">
               Let&apos;s work{" "}
               <span className="text-gradient clash-grotesk">together.</span>
             </h2>
-            <p className="mt-1.5 text-base tracking-tight text-muted-foreground xl:text-lg">
+            <p className="mt-1.5 text-sm sm:text-base tracking-tight text-muted-foreground xl:text-lg">
               I&apos;m currently available for freelance work and open to
               discussing new projects.
             </p>
