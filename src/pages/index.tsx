@@ -3,16 +3,12 @@ import { useEffect, useRef, Suspense, useState } from "react";
 import styles from "@/styles/Home.module.css";
 import { Button } from "@/components/ui/button";
 import { LampDemo } from "@/components/lamp";
-import ScrollMaskSection from "@/components/ScrollMaskSection";
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
 
 import {
   ChevronRight,
   Code2,
-  Frame,
-  SearchCheck,
-  Eye,
+  
   MonitorSmartphone,
   Smartphone,
   Server,
@@ -72,49 +68,60 @@ import { motion } from "framer-motion";
 const projects = [
   {
     title: "GateKepper",
-    description:
-      "Software for IEEE-RVCE this software is designed to streamline and enhance the event permission approval process within the IEEE RVCE organizational structure",
+    description: "Software for IEEE-RVCE this software is designed to streamline and enhance the event permission approval process within the IEEE RVCE organizational structure",
     image: "/assets/1.jpeg",
     href: "https://gate.ieee-rvce.org/login",
+    github: "https://github.com/AyushRatan1/GateKepper",
+    tags: ["Next.js", "TypeScript", "Tailwind"]
   },
   {
     title: "VED-AI",
-    description:
-      "Developed an AI-powered chatbot platform that ofers personalized learning and connectivity by leveraging RAG-based AI, LLM technology, and custom knowledge graphs.",
+    description: "Developed an AI-powered chatbot platform that ofers personalized learning and connectivity by leveraging RAG-based AI, LLM technology, and custom knowledge graphs.",
     image: "/assets/VED2.mp4",
     href: "https://ved-ai.com/",
+    github: "https://github.com/AyushRatan1/VED-AI",
+    tags: ["AI", "LLM", "Next.js"]
   },
   {
     title: "Website",
     description: "Freelance project",
     image: "/assets/5.mp4",
     href: "https://ayushratan1.github.io/Marbella/",
+    github: "https://github.com/AyushRatan1/Marbella",
+    tags: ["React", "CSS", "JavaScript"]
   },
   {
     title: "CSITSS",
     description: "Website for CSITSS International conference",
     image: "/assets/3.png",
     href: "https://csitss.ieee-rvce.org/",
+    github: "https://github.com/AyushRatan1/CSITSS",
+    tags: ["Next.js", "TypeScript"]
   },
   {
     title: "Coin Split",
     description: "A Web3 based project to allow splitwise features but on cryptocurrency and makes it easy to share and recieve crypto",
     image: "/assets/6.png",
     href: "https://csitss.ieee-rvce.org/",
+    github: "https://github.com/AyushRatan1/CoinSplit",
+    tags: ["Web3", "Solidity", "React"]
   },
-  
   {
-    title: "Community Nexus ",
+    title: "Community Nexus",
     description: "AI based application for Community Developemnt",
     image: "/assets/5.jpeg",
     href: "https://github.com/HarshJha454/Com_nex",
+    github: "https://github.com/HarshJha454/Com_nex",
+    tags: ["AI", "Python", "React"]
   },
   {
-    title: "EMG sensor ",
+    title: "EMG sensor",
     description: "Robotics-arm motion detection",
     image: "/assets/4.png",
     href: "https://github.com/AyushRatan1/EMG-Sensor-based-VR-Controller",
-  },
+    github: "https://github.com/AyushRatan1/EMG-Sensor-based-VR-Controller",
+    tags: ["IoT", "Arduino", "C++"]
+  }
 ];
 
 const services = [
@@ -356,7 +363,7 @@ export default function Home() {
               {/* Intro text */}
               <div className="relative">
                 <h2 className="max-w-4xl text-2xl sm:text-3xl font-light leading-relaxed tracking-tight text-foreground md:text-4xl lg:text-5xl">
-                  I'm an experienced{' '}
+                  I&apos;m an experienced{' '}
                   <span className="animate-text-gradient bg-gradient-to-r from-purple-400 via-blue-500 to-purple-400 bg-clip-text text-transparent">
                     full-stack & mobile developer
                   </span>{' '}
@@ -443,7 +450,13 @@ export default function Home() {
 
             {/* Carousel */}
             <div className="mt-8 sm:mt-14">
-              <Carousel setApi={setCarouselApi} className="w-full">
+              <Carousel
+                setApi={setCarouselApi}
+                className="w-full"
+                opts={{
+                  align: "start",
+                }}
+              >
                 <CarouselContent>
                   {projects.map((project) => (
                     <CarouselItem key={project.title} className="md:basis-1/2">
