@@ -252,7 +252,7 @@ export default function Home() {
         <Gradient />
 
         {/* Lamp Demo */}
-        <section data-scroll-section className="bg-black relative isolate min-h-screen">
+        <section  className="bg-black relative isolate min-h-screen">
           <div className="absolute inset-0 bg-black -z-10" />
           <LampDemo />
         </section>
@@ -314,11 +314,13 @@ export default function Home() {
               data-scroll-speed=".06"
               className="flex flex-row items-center space-x-1.5 pt-6"
             >
-              <Link href="ayushratan082@gmail.com" passHref>
-                <Button>
+              
+                <Button
+                variant="outline"
+                onClick={() => scrollTo(document.querySelector("#about"))}>
                   Get in touch <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
-              </Link>
+            
               <Button
                 variant="outline"
                 onClick={() => scrollTo(document.querySelector("#about"))}
