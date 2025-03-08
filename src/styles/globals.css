@@ -35,6 +35,15 @@
     
     --radius: 0.5rem;
   }
+  
+  /* Fix for mobile viewport issues */
+  html, body {
+    @apply overflow-x-hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
 }
 
 /* global elements */
