@@ -36,27 +36,79 @@
     --radius: 0.5rem;
   }
   
-  /* Fix for mobile viewport issues */
-  html, body {
-    @apply overflow-x-hidden;
+  /* Improved scrolling and viewport handling */
+  html {
+    @apply antialiased;
+    background-color: #000000;
+    scroll-behavior: smooth;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply text-foreground;
+    background-color: #000000 !important;
+    min-height: 100vh;
     width: 100%;
     margin: 0;
     padding: 0;
     position: relative;
+    overflow-x: hidden;
+    /* Remove cursor-wait to prevent loading cursor */
+    cursor: default;
+  }
+
+  #__next {
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+    width: 100%;
+    position: relative;
+  }
+
+  section {
+    scroll-margin-top: 60px;
+    position: relative;
+    background-color: #000000;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Mobile-specific fixes */
+  @media (max-width: 768px) {
+    html, body, #__next, main, section {
+      overflow-x: hidden;
+      width: 100%;
+      position: relative;
+    }
+    
+    body {
+      touch-action: pan-y pinch-zoom;
+    }
+  }
+
+  /* Horizontal scroll specific styles */
+  html[data-scroll-orientation="horizontal"] {
+    body {
+      @apply w-fit overflow-x-auto overflow-y-hidden;
+    }
+    [data-scroll-container] {
+      @apply flex items-start;
+      height: 100vh;
+    }
   }
 }
 
 /* global elements */
 @layer base {
-  html[data-scroll-orientation="horizontal"] {
-    body {
-      @apply w-fit;
-    }
-    [data-scroll-container] {
-      @apply flex;
-    }
-  }
-  
   * {
     @apply border-border;
   }
@@ -69,12 +121,6 @@
   body {
     @apply text-foreground cursor-wait;
     background-color: #000000 !important;
-  }
-  
-  section {
-    scroll-margin-top: 60px;
-    position: relative;
-    background-color: #000000;
   }
   
   section::before {
@@ -100,10 +146,11 @@
   }
 }
 
-/* custom scrollbar */
+/* Improved scrollbar styles */
 @layer base {
   ::-webkit-scrollbar {
-    @apply h-2.5 w-2 transition;
+    @apply w-1.5 transition;
+    height: 4px;
   }
   
   ::-webkit-scrollbar-track {
@@ -111,12 +158,24 @@
   }
   
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 6px;
   }
   
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
   ::-webkit-scrollbar-thumb:active {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  /* Hide scrollbar on mobile */
+  @media (max-width: 768px) {
+    ::-webkit-scrollbar {
+      width: 0px;
+      height: 0px;
+    }
   }
 }
 
