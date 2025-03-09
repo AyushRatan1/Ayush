@@ -7,6 +7,7 @@ import { LampDemo } from "@/components/lamp";
 
 import {
   ChevronRight,
+  ChevronLeft,
   Code2,
   
   MonitorSmartphone,
@@ -451,7 +452,7 @@ export default function Home() {
             </p>
 
             {/* Carousel */}
-            <div className="mt-8 sm:mt-14">
+            <div className="mt-8 sm:mt-14 relative">
               <Carousel
                 setApi={setCarouselApi}
                 className="w-full"
@@ -460,48 +461,100 @@ export default function Home() {
                 }}
               >
                 <CarouselContent>
-                  {projects.map((project) => (
-                    <CarouselItem key={project.title} className="md:basis-1/2">
-                      <Card id="tilt">
-                        <CardHeader className="p-0">
-                          <Link href={project.href} target="_blank" passHref>
-                            {project.image.endsWith(".mp4") ? (
-                              <video
-                                src={project.image}
-                                autoPlay
-                                loop
-                                muted
-                                className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
-                              />
-                            ) : (
-                              <Image
-                                src={project.image}
-                                alt={project.title}
-                                width={600}
-                                height={300}
-                                quality={100}
-                                className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
-                              />
-                            )}
-                          </Link>
-                        </CardHeader>
-                        <CardContent className="absolute bottom-0 w-full bg-background/50 backdrop-blur">
-                          <CardTitle className="border-t border-white/5 p-4 text-sm sm:text-base font-normal tracking-tighter">
-                            {project.description}
-                          </CardTitle>
-                        </CardContent>
-                      </Card>
+                  {projects.map((project, index) => (
+                    <CarouselItem key={index} className="md:basis-1/2">
+                      <Link
+                        key={index}
+                        href={project.href}
+                        target="_blank"
+                        className="group relative block w-full overflow-hidden rounded-lg bg-card p-2 transition-all hover:bg-accent sm:p-4"
+                      >
+                        <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+                          {project.image.endsWith('.mp4') ? (
+                            <video
+                              src={project.image}
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <Image
+                              src={project.image}
+                              alt={project.title}
+                              width={1920}
+                              height={1080}
+                              className="h-full w-full object-cover"
+                            />
+                          )}
+                        </div>
+                        <div className="mt-4 flex items-start justify-between gap-4">
+                          <div>
+                            <h3 className="font-medium">{project.title}</h3>
+                            <p className="mt-2 text-sm text-muted-foreground">
+                              {project.description}
+                            </p>
+                            <div className="mt-4 flex flex-wrap gap-2">
+                              {project.tags.map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="rounded-full bg-primary/10 px-2 py-1 text-xs text-primary"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          <ChevronRight className="h-5 w-5 transform text-foreground/50 transition-all group-hover:translate-x-1 group-hover:text-foreground" />
+                        </div>
+                      </Link>
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
+                
+                {/* Enhanced Navigation Controls */}
+                <div className="absolute -left-4 sm:-left-12 top-1/2 -translate-y-1/2 flex items-center justify-center">
+                  <CarouselPrevious className="h-8 w-8 sm:h-12 sm:w-12 rounded-full bg-background/80 hover:bg-background border border-border/50 backdrop-blur" />
+                </div>
+                <div className="absolute -right-4 sm:-right-12 top-1/2 -translate-y-1/2 flex items-center justify-center">
+                  <CarouselNext className="h-8 w-8 sm:h-12 sm:w-12 rounded-full bg-background/80 hover:bg-background border border-border/50 backdrop-blur" />
+                </div>
               </Carousel>
-              <div className="py-2 text-center text-xs sm:text-sm text-muted-foreground">
-                <span className="font-semibold">
-                  {current} / {count}
-                </span>{" "}
-                projects
+
+              {/* Enhanced Progress Indicator */}
+              <div className="mt-6 flex flex-col items-center justify-center gap-2">
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => carouselApi?.scrollPrev()} 
+                    className="p-2 hover:bg-accent rounded-full transition-colors"
+                  >
+                    <ChevronLeft className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+                  </button>
+                  <span className="text-sm sm:text-base font-medium">
+                    <span className="text-foreground">{current}</span>
+                    <span className="text-muted-foreground"> / {count}</span>
+                  </span>
+                  <button 
+                    onClick={() => carouselApi?.scrollNext()} 
+                    className="p-2 hover:bg-accent rounded-full transition-colors"
+                  >
+                    <ChevronRight className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+                  </button>
+                </div>
+                <div className="flex gap-1">
+                  {Array.from({ length: count }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => carouselApi?.scrollTo(i)}
+                      className={`h-1.5 rounded-full transition-all ${
+                        i === current - 1 
+                          ? "w-6 bg-primary" 
+                          : "w-1.5 bg-muted hover:bg-muted-foreground"
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
