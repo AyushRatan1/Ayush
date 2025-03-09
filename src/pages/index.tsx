@@ -158,41 +158,15 @@ const services = [
   }
 ];
 export default function Home() {
-  const refScrollContainer = useRef(null);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
 
-  // handle mouse movement for gradient effect
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const sections = document.querySelectorAll('section');
-      sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        section.style.setProperty('--mouse-x', `${x}%`);
-        section.style.setProperty('--mouse-y', `${y}%`);
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
   // handle scroll
   useEffect(() => {
     const sections = document.querySelectorAll("section");
     const navLinks = document.querySelectorAll(".nav-link");
-
-    async function getLocomotive() {
-      const Locomotive = (await import("locomotive-scroll")).default;
-      new Locomotive({
-        el: refScrollContainer.current ?? new HTMLElement(),
-        smooth: true,
-      });
-    }
 
     function handleScroll() {
       let current = "";
@@ -207,20 +181,14 @@ export default function Home() {
 
       navLinks.forEach((li) => {
         li.classList.remove("nav-active");
-
         if (li.getAttribute("href") === `#${current}`) {
           li.classList.add("nav-active");
-          console.log(li.getAttribute("href"));
         }
       });
     }
 
-    void getLocomotive();
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -249,11 +217,11 @@ export default function Home() {
 
   return (
     <Container>
-      <div ref={refScrollContainer}>
+      <div>
         <Gradient />
 
         {/* Lamp Demo */}
-        <section  className="bg-black relative isolate min-h-screen">
+        <section className="bg-black relative isolate min-h-screen">
           <div className="absolute inset-0 bg-black -z-10" />
           <LampDemo />
         </section>
@@ -261,27 +229,16 @@ export default function Home() {
         {/* Intro */}
         <section
           id="home"
-          data-scroll-section
           className="mt-20 sm:mt-40 px-4 flex w-full flex-col items-center xl:mt-0 xl:min-h-screen xl:flex-row xl:justify-between"
         >
           <div className={styles.intro}>
-            <div
-              data-scroll
-              data-scroll-direction="horizontal"
-              data-scroll-speed=".09"
-              className="flex flex-row items-center space-x-1.5"
-            >
+            <div className="flex flex-row items-center space-x-1.5">
               <span className={styles.pill}>next.js</span>
               <span className={styles.pill}>tailwindcss</span>
               <span className={styles.pill}>typescript</span>
             </div>
             <div>
-              <h1
-                data-scroll
-                data-scroll-enable-touch-speed
-                data-scroll-speed=".06"
-                data-scroll-direction="horizontal"
-              >
+              <h1>
                 <span className="text-4xl sm:text-6xl tracking-tighter text-foreground 2xl:text-8xl">
                   Hello, I&apos;m
                   <br />
@@ -290,62 +247,41 @@ export default function Home() {
                   Ayush Ratan.
                 </span>
               </h1>
-              <p
-                data-scroll
-                data-scroll-enable-touch-speed
-                data-scroll-speed=".06"
-                className="mt-1 max-w-lg tracking-tight text-muted-foreground text-base sm:text-lg 2xl:text-xl"
-              >
+              <p className="mt-1 max-w-lg tracking-tight text-muted-foreground text-base sm:text-lg 2xl:text-xl">
                 Undergraduate Student at RV College of Engineering
               </p>
-              <br></br>
-              <p
-                data-scroll
-                data-scroll-enable-touch-speed
-                data-scroll-speed=".06"
-                className="mt-1 max-w-lg tracking-tight text-muted-foreground text-base sm:text-lg 2xl:text-xl"
-              >
+              <br />
+              <p className="mt-1 max-w-lg tracking-tight text-muted-foreground text-base sm:text-lg 2xl:text-xl">
                 An experienced full-stack website developer with a passion for
                 crafting unique digital experiences.
               </p>
             </div>
-            <span
-              data-scroll
-              data-scroll-enable-touch-speed
-              data-scroll-speed=".06"
-              className="flex flex-row items-center space-x-1.5 pt-6"
-            >
-              
-                <Button
-                variant="outline"
-                onClick={() => scrollTo(document.querySelector("#about"))}>
-                  Get in touch <ChevronRight className="ml-1 h-4 w-4" />
-                </Button>
-            
+            <span className="flex flex-row items-center space-x-1.5 pt-6">
               <Button
                 variant="outline"
-                onClick={() => scrollTo(document.querySelector("#about"))}
+                onClick={() => {
+                  const section = document.querySelector("#about");
+                  section?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                Get in touch <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const section = document.querySelector("#about");
+                  section?.scrollIntoView({ behavior: "smooth" });
+                }}
               >
                 Learn more
               </Button>
             </span>
 
-            <div
-              className={cn(
-                styles.scroll,
-                isScrolled && styles["scroll--hidden"],
-              )}
-            >
-              Scroll to discover{" "}
-              <TriangleDownIcon className="mt-1 animate-bounce" />
+            <div className={cn(styles.scroll, isScrolled && styles["scroll--hidden"])}>
+              Scroll to discover <TriangleDownIcon className="mt-1 animate-bounce" />
             </div>
           </div>
-          <div
-            data-scroll
-            data-scroll-speed="-.01"
-            id={styles["canvas-container"]}
-            className="mt-10 sm:mt-14 h-[300px] sm:h-full w-full xl:mt-0"
-          >
+          <div id={styles["canvas-container"]} className="mt-10 sm:mt-14 h-[300px] sm:h-full w-full xl:mt-0">
             <Suspense fallback={<span>Loading...</span>}>
               <Spline scene="https://prod.spline.design/NL3sY1jG3mCpVnZ1/scene.splinecode" />
             </Suspense>
@@ -438,8 +374,8 @@ export default function Home() {
         </section>
         
         {/* Projects */}
-        <section id="projects" data-scroll-section className="px-4">
-          <div data-scroll data-scroll-speed=".4" className="my-32 sm:my-64">
+        <section id="projects" className="px-4">
+          <div className="my-32 sm:my-64">
             <span className="text-gradient clash-grotesk text-sm font-semibold tracking-tighter">
               ✨ Projects
             </span>
@@ -624,13 +560,8 @@ export default function Home() {
         </section>
 
         {/* Contact */}
-        <section id="contact" data-scroll-section className="my-32 sm:my-64 px-4">
-          <div
-            data-scroll
-            data-scroll-speed=".4"
-            data-scroll-position="top"
-            className="flex flex-col items-center justify-center rounded-lg bg-gradient-to-br from-primary/[6.5%] to-white/5 px-4 sm:px-8 py-12 sm:py-16 text-center xl:py-24"
-          >
+        <section id="contact" className="my-32 sm:my-64 px-4">
+          <div className="flex flex-col items-center justify-center rounded-lg bg-gradient-to-br from-primary/[6.5%] to-white/5 px-4 sm:px-8 py-12 sm:py-16 text-center xl:py-24">
             <h2 className="text-3xl sm:text-4xl font-medium tracking-tighter xl:text-6xl">
               Let&apos;s work{" "}
               <span className="text-gradient clash-grotesk">together.</span>

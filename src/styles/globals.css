@@ -36,13 +36,10 @@
     --radius: 0.5rem;
   }
   
-  /* Improved scrolling and viewport handling */
   html {
     @apply antialiased;
     background-color: #000000;
     scroll-behavior: smooth;
-    height: 100%;
-    overflow-y: auto;
     overflow-x: hidden;
   }
 
@@ -55,15 +52,12 @@
     padding: 0;
     position: relative;
     overflow-x: hidden;
-    /* Remove cursor-wait to prevent loading cursor */
-    cursor: default;
   }
 
   #__next {
     min-height: 100vh;
     width: 100%;
     position: relative;
-    overflow-x: hidden;
     display: flex;
     flex-direction: column;
   }
@@ -75,11 +69,9 @@
   }
 
   section {
-    scroll-margin-top: 60px;
     position: relative;
     background-color: #000000;
     width: 100%;
-    overflow-x: hidden;
   }
 
   /* Mobile-specific fixes */
@@ -94,45 +86,44 @@
     }
     
     body {
-      touch-action: pan-y pinch-zoom;
-      overscroll-behavior-y: none;
+      touch-action: manipulation;
       -webkit-overflow-scrolling: touch;
-    }
-
-    #__next {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    main {
-      flex: 1;
-      width: 100% !important;
-      padding-left: env(safe-area-inset-left);
-      padding-right: env(safe-area-inset-right);
     }
 
     section {
       padding-left: 1rem;
       padding-right: 1rem;
     }
-
-    /* Fix for iOS Safari bottom bar */
-    @supports (-webkit-touch-callout: none) {
-      html {
-        min-height: -webkit-fill-available;
-      }
-    }
   }
 
-  /* Horizontal scroll specific styles */
-  html[data-scroll-orientation="horizontal"] {
-    body {
-      @apply w-fit overflow-x-auto overflow-y-hidden;
-    }
-    [data-scroll-container] {
-      @apply flex items-start;
-      height: 100vh;
+  /* Improved scrollbar styles */
+  ::-webkit-scrollbar {
+    @apply w-1.5 transition;
+    height: 4px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  ::-webkit-scrollbar-thumb:active {
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  /* Hide scrollbar on mobile */
+  @media (max-width: 768px) {
+    ::-webkit-scrollbar {
+      width: 0px;
+      height: 0px;
     }
   }
 }
@@ -173,39 +164,6 @@
   main,
   [data-scroll-container] {
     background-color: #000000;
-  }
-}
-
-/* Improved scrollbar styles */
-@layer base {
-  ::-webkit-scrollbar {
-    @apply w-1.5 transition;
-    height: 4px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.3);
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
-  
-  ::-webkit-scrollbar-thumb:active {
-    background: rgba(255, 255, 255, 0.4);
-  }
-
-  /* Hide scrollbar on mobile */
-  @media (max-width: 768px) {
-    ::-webkit-scrollbar {
-      width: 0px;
-      height: 0px;
-    }
   }
 }
 
